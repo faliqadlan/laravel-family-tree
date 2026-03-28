@@ -55,7 +55,9 @@ class DemoShowcaseSeeder extends Seeder
         );
 
         foreach ([$owner, $coResearcher, $viewer] as $user) {
-            $user->teams()->syncWithoutDetaching([$team->id]);
+            $user->teams()->syncWithoutDetaching([
+                $team->id => ['role' => $user->id === $owner->id ? 'admin' : 'editor'],
+            ]);
             if ((int) $user->current_team_id !== (int) $team->id) {
                 $user->current_team_id = $team->id;
                 $user->save();

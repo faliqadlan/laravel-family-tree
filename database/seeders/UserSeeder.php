@@ -29,7 +29,9 @@ class UserSeeder extends Seeder
         );
 
         $team = Team::firstOrFail();
-        $adminUser->teams()->syncWithoutDetaching([$team->id]);
+        $adminUser->teams()->syncWithoutDetaching([
+            $team->id => ['role' => 'admin'],
+        ]);
 
         $role = Role::where('name', 'super_admin')->firstOrFail();
         if (! $adminUser->hasRole($role->name)) {

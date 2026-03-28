@@ -26,6 +26,11 @@ Route::get('/register', fn () => redirect('/app/register'))->name('register');
 Route::get('/login', fn () => redirect('/app/login'))->name('login');
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware('guest');
 
+// Backward-compatible chart routes used by older bookmarks and docs.
+Route::get('/app/{tenant}/pedigree-chart', fn ($tenant) => redirect("/app/{$tenant}/pedigree-chart-page"));
+Route::get('/app/{tenant}/fan-chart', fn ($tenant) => redirect("/app/{$tenant}/fan-chart-page"));
+Route::get('/app/{tenant}/descendant-chart', fn ($tenant) => redirect("/app/{$tenant}/descendant-chart-page"));
+
 Route::get('/privacy', fn () => view('pages.privacy'))->name('privacy');
 Route::get('/terms-and-conditions', fn () => view('pages.termsandconditions'))->name('terms.and.conditions');
 

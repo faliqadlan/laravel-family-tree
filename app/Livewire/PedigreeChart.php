@@ -32,20 +32,20 @@ class PedigreeChart extends Component
     {
         $this->rootPersonId = $rootPersonId ?? Person::query()->value('id');
         $this->generations = max(3, min(8, $generations));
-        $this->hydrateTree();
+        $this->rebuildTree();
     }
 
     public function setRootPerson(int $personId): void
     {
         $this->rootPersonId = $personId;
-        $this->hydrateTree();
+        $this->rebuildTree();
         $this->dispatch('refreshChart');
     }
 
     public function setGenerations(int $generations): void
     {
         $this->generations = max(3, min(8, $generations));
-        $this->hydrateTree();
+        $this->rebuildTree();
         $this->dispatch('refreshChart');
     }
 
@@ -60,7 +60,7 @@ class PedigreeChart extends Component
         $this->setRootPerson($personId);
     }
 
-    protected function hydrateTree(): void
+    protected function rebuildTree(): void
     {
         if (! $this->rootPersonId) {
             $this->tree = [];

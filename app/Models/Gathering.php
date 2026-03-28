@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Gathering extends Model
 {
-    use HasFactory, SoftDeletes;
+    use BelongsToTenant;
+    use HasFactory;
+    use SoftDeletes;
 
     // Type constants
     public const TYPE_REUNION = 'reunion';
@@ -33,6 +36,7 @@ class Gathering extends Model
     public const PRIVACY_PRIVATE = 'private';
 
     protected $fillable = [
+        'team_id',
         'organizer_id',
         'tree_id',
         'person_id',

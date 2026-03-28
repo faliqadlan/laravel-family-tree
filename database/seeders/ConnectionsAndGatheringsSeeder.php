@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Gathering;
 use App\Models\GatheringComment;
 use App\Models\GatheringInvitation;
+use App\Models\Team;
 use App\Models\User;
 use App\Models\UserConnection;
 use App\Models\UserPrivacySetting;
@@ -26,6 +27,7 @@ class ConnectionsAndGatheringsSeeder extends Seeder
         $user2 = $users->get(1);
         $user3 = $users->count() > 2 ? $users->get(2) : $user1;
         $user4 = $users->count() > 3 ? $users->get(3) : $user2;
+        $teamId = $user1->current_team_id ?: Team::query()->value('id');
 
         // Create 3 UserConnections
         UserConnection::firstOrCreate(
@@ -54,6 +56,7 @@ class ConnectionsAndGatheringsSeeder extends Seeder
 
         // Gathering 1: Annual Family Reunion
         $gathering1 = Gathering::create([
+            'team_id' => $teamId,
             'organizer_id' => $user1->id,
             'title' => 'Annual Family Reunion 2026',
             'type' => Gathering::TYPE_REUNION,
@@ -93,6 +96,7 @@ class ConnectionsAndGatheringsSeeder extends Seeder
 
         // Gathering 2: Memorial Service
         $gathering2 = Gathering::create([
+            'team_id' => $teamId,
             'organizer_id' => $user2->id,
             'title' => 'In Memory of Grandma Rose',
             'type' => Gathering::TYPE_MEMORIAL,
