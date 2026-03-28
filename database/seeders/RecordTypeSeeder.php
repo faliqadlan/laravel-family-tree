@@ -490,7 +490,10 @@ class RecordTypeSeeder extends Seeder
         ];
 
         foreach ($recordTypes as $recordType) {
-            RecordType::create($recordType);
+            RecordType::updateOrCreate(
+                ['slug' => $recordType['slug']],
+                $recordType
+            );
         }
     }
 }

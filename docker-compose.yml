@@ -17,7 +17,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        PHP_VERSION: '8.3'
+        PHP_VERSION: '8.5'
         # Pass host UID/GID so file-ownership inside the container
         # matches the WSL/Linux host user (avoids permission errors).
         WWWUSER: '${WWWUSER:-1000}'
@@ -47,7 +47,7 @@ services:
     init: true
     restart: unless-stopped
     healthcheck:
-      test: ['CMD', 'php', 'artisan', 'octane:status']
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1']
       start_period: 30s
       interval: 15s
       timeout: 10s
@@ -60,7 +60,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        PHP_VERSION: '8.3'
+        PHP_VERSION: '8.5'
         WWWUSER: '${WWWUSER:-1000}'
         WWWGROUP: '${WWWGROUP:-1000}'
     image: liberu-genealogy:latest
@@ -92,7 +92,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        PHP_VERSION: '8.3'
+        PHP_VERSION: '8.5'
         WWWUSER: '${WWWUSER:-1000}'
         WWWGROUP: '${WWWGROUP:-1000}'
     image: liberu-genealogy:latest

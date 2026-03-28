@@ -19,18 +19,22 @@ class UserSeeder extends Seeder
     {
 
         $adminPassword = Str::random(12);
-        $adminUser = User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@example.com',
-            'password' => Hash::make($adminPassword),
-            'email_verified_at' => now(),
-        ]);
+        $adminUser = User::updateOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make($adminPassword),
+                'email_verified_at' => now(),
+            ]
+        );
 
         $team = Team::firstOrFail();
         $adminUser->teams()->syncWithoutDetaching([$team->id]);
 
         $role = Role::where('name', 'super_admin')->firstOrFail();
-        $adminUser->assignRole($role);
+        if (! $adminUser->hasRole($role->name)) {
+            $adminUser->assignRole($role);
+        }
 
         // Print passwords to console
         echo "Admin password: {$adminPassword}\n";

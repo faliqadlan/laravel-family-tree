@@ -4,6 +4,7 @@ use App\Http\Controllers\AIMatchController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\TeamInvitationController;
 use Illuminate\Support\Facades\Route;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,7 @@ Route::post('/accept-invitation/{token}', [TeamInvitationController::class, 'acc
 
 Route::get('/register', fn () => redirect('/app/register'))->name('register');
 Route::get('/login', fn () => redirect('/app/login'))->name('login');
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware('guest');
 
 Route::get('/privacy', fn () => view('pages.privacy'))->name('privacy');
 Route::get('/terms-and-conditions', fn () => view('pages.termsandconditions'))->name('terms.and.conditions');

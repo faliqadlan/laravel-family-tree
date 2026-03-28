@@ -39,7 +39,7 @@
                 </a>
                 <a href="/register"
                    class="inline-flex items-center px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-lg transition-colors duration-200 shadow-sm">
-                    Get Started
+                    Let's Started
                 </a>
             @endif
         </div>

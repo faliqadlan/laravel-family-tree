@@ -8,6 +8,8 @@ use App\Modules\ModuleManager;
 use App\Modules\ModuleServiceProvider;
 use Exception;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Vite;
+use Illuminate\Support\Facades\URL;
 use Log;
 
 class AppServiceProvider extends ServiceProvider
@@ -38,6 +40,20 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        URL::forceRootUrl(config('app.url'));
+
+        if (str_starts_with((string) config('app.url'), 'https://')) {
+            URL::forceScheme('https');
+        }
+
+        // Force path-only asset URLs so CSS/JS keep working behind
+        // embedded browser proxies that may rewrite host/port headers.
+        Vite::createAssetPathsUsing(function (string $path): string {
+            $cleanPath = parse_url($path, PHP_URL_PATH) ?: $path;
+
+            return '/'.ltrim($cleanPath, '/');
+        });
+
         if (config('app.debug')) {
             // \DB::listen(function ($query): void {
             //     \Log::info(

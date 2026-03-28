@@ -31,9 +31,9 @@
                         </svg>
                         Go to Dashboard
                     </a>
-                    <a href="{{ url('/app/subscription') }}"
+                    <a href="#all-features"
                        class="inline-flex items-center px-6 py-4 bg-white hover:bg-gray-50 text-emerald-600 font-semibold rounded-lg border-2 border-emerald-200 hover:border-emerald-300 transition-all duration-200">
-                        ✨ Explore Premium Features
+                        See All Features
                     </a>
                 </div>
             @else
@@ -43,16 +43,16 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
                         </svg>
-                        Start Free Today
+                        Let's Start
                     </a>
-                    <a href="{{ route('subscription') }}"
+                    <a href="#all-features"
                        class="inline-flex items-center px-6 py-4 bg-white hover:bg-gray-50 text-emerald-600 font-semibold rounded-lg border-2 border-emerald-200 hover:border-emerald-300 transition-all duration-200">
-                        ✨ Explore Premium Features
+                        See All Features
                     </a>
                 </div>
 
                 <p class="text-sm text-gray-500 mt-4">
-                    Free forever • No credit card required • 7-day premium trial
+                    Free forever • No credit card required • All features included
                 </p>
             @endauth
         </div>
@@ -60,7 +60,7 @@
 </section>
 
 <!-- Features Section -->
-<section class="py-20 bg-white">
+<section id="all-features" class="py-20 bg-white">
     <div class="container mx-auto px-4">
         <div class="text-center mb-16">
             <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -141,105 +141,6 @@
     </div>
 </section>
 
-<!-- Premium Features Section -->
-<section class="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
-    <div class="container mx-auto px-4">
-        <div class="text-center mb-16">
-            <div class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-yellow-400 to-orange-400 text-white rounded-full text-sm font-medium mb-6">
-                ✨ Premium Features
-            </div>
-            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Unlock Advanced Genealogy Tools
-            </h2>
-            <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-                Take your family research to the next level with premium features designed for serious genealogists
-            </p>
-        </div>
-
-        <div class="max-w-4xl mx-auto">
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-                <div class="grid md:grid-cols-2 gap-8 p-8">
-                    <div>
-                        <h3 class="text-2xl font-bold text-gray-900 mb-6">Premium Benefits</h3>
-                        <div class="space-y-4">
-                            <div class="flex items-start">
-                                <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                    <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-900">Unlimited DNA Uploads</h4>
-                                    <p class="text-gray-600 text-sm">Upload DNA results from multiple testing companies</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                    <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-900">Smart Duplicate Checker</h4>
-                                    <p class="text-gray-600 text-sm">Automatically find and merge duplicate entries</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                    <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-900">Smart Matching</h4>
-                                    <p class="text-gray-600 text-sm">Find potential matches across public family trees</p>
-                                </div>
-                            </div>
-                            <div class="flex items-start">
-                                <div class="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                    <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-gray-900">Premium Badge</h4>
-                                    <p class="text-gray-600 text-sm">Show your commitment to family research</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-gradient-to-br from-emerald-50 to-blue-50 p-6 rounded-xl">
-                        <div class="text-center">
-                            <div class="text-4xl font-bold text-gray-900 mb-2">£4.99</div>
-                            <div class="text-gray-600 mb-6">per month</div>
-                            <div class="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium mb-6">
-                                7-day free trial
-                            </div>
-                            @guest
-                                <a href="{{ route('register') }}"
-                                   class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
-                                    Start Free Trial
-                                </a>
-                                <p class="text-xs text-gray-500 mt-3">No credit card required</p>
-                                <a href="{{ route('subscription') }}"
-                                   class="block w-full mt-2 text-center text-emerald-600 hover:text-emerald-700 text-sm font-medium transition-colors duration-200">
-                                    Learn more about premium →
-                                </a>
-                            @else
-                                <a href="{{ url('/app/subscription') }}"
-                                   class="block w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
-                                    Upgrade to Premium
-                                </a>
-                            @endguest
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- CTA Section -->
 <section class="py-20 bg-emerald-600">
     <div class="container mx-auto px-4 text-center">
@@ -255,7 +156,7 @@
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                 </svg>
-                Get Started Free
+                Let's Started
             </a>
         @else
             <a href="{{ route('filament.app.tenant') }}"

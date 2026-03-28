@@ -11,7 +11,7 @@ WORKDIR /app
 
 # Install required extensions for composer install
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-RUN install-php-extensions intl sockets zip
+RUN install-php-extensions intl sockets zip bcmath
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -162,5 +162,5 @@ EXPOSE 8000
 
 ENTRYPOINT ["start-container"]
 
-HEALTHCHECK --start-period=5s --interval=2s --timeout=5s --retries=8 CMD php artisan octane:status || exit 1
+HEALTHCHECK --start-period=5s --interval=2s --timeout=5s --retries=8 CMD wget -qO- http://127.0.0.1/ >/dev/null 2>&1 || exit 1
 

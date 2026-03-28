@@ -85,7 +85,7 @@
                 <div class="mt-8">
                     <a href="{{ route('register') }}"
                        class="block w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors duration-200">
-                        Get Started Free
+                        Let's Get Started
                     </a>
                 </div>
             </div>
