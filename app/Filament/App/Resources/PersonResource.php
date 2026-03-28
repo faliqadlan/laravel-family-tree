@@ -6,6 +6,7 @@ use Override;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Checkbox;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\Grid;
 use Filament\Tables\Columns\TextColumn;
@@ -19,6 +20,7 @@ use UnitEnum;
 use BackedEnum;
 use App\Filament\App\Resources\PersonResource\Pages;
 use App\Models\Person;
+use App\Models\Family;
 use Filament\Forms;
 use Filament\Forms\Form;
 use App\Filament\App\Resources\AppResource;
@@ -81,7 +83,54 @@ class PersonResource extends AppResource
                         DateTimePicker::make('birthday')->label('Date of Birth'),
                         DateTimePicker::make('deathday')->label('Date of Death'),
                         DateTimePicker::make('burial_day')->label('Burial Date'),
-                        TextInput::make('child_in_family_id')->label('Child in Family ID'),
+                        Select::make('child_in_family_id')
+                            ->label('Child in Family')
+                            ->searchable()
+                            ->options(function () {
+                                return Family::with(['husband', 'wife'])
+                                    ->orderByDesc('id')
+                                    ->get()
+                                    ->mapWithKeys(function (Family $family): array {
+                                        $father = $family->husband?->fullname() ?? 'Unknown Father';
+                                        $mother = $family->wife?->fullname() ?? 'Unknown Mother';
+
+                                        return [$family->id => "{$father} & {$mother}"];
+                                    })
+                                    ->toArray();
+                            }),
+                    ]),
+
+                Section::make('Parent Linking')
+                    ->description('Choose father/mother and confirm before linking this person as their child.')
+                    ->icon('heroicon-o-link')
+                    ->columns(2)
+                    ->schema([
+                        Select::make('father_id')
+                            ->label('Father')
+                            ->searchable()
+                            ->options(fn () => Person::query()
+                                ->where('sex', 'M')
+                                ->orderBy('givn')
+                                ->orderBy('surn')
+                                ->get()
+                                ->mapWithKeys(fn (Person $person): array => [$person->id => $person->fullname()])
+                                ->toArray())
+                            ->helperText('Optional. Select the father to build/connect a family link.'),
+                        Select::make('mother_id')
+                            ->label('Mother')
+                            ->searchable()
+                            ->options(fn () => Person::query()
+                                ->where('sex', 'F')
+                                ->orderBy('givn')
+                                ->orderBy('surn')
+                                ->get()
+                                ->mapWithKeys(fn (Person $person): array => [$person->id => $person->fullname()])
+                                ->toArray())
+                            ->helperText('Optional. Select the mother to build/connect a family link.'),
+                        Checkbox::make('confirm_parent_linking')
+                            ->label('Confirm parent linking for this person')
+                            ->columnSpanFull()
+                            ->helperText('For safety, linking only applies when this checkbox is enabled.'),
                     ]),
 
                 Section::make('Contact Information')

@@ -9,10 +9,50 @@ use Filament\Resources\Pages\EditRecord;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use App\Models\MediaObject;
+use App\Models\Family;
+use Illuminate\Support\Facades\Auth;
 
 class EditPerson extends EditRecord
 {
     protected static string $resource = PersonResource::class;
+
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $record = $this->getRecord()->load('childInFamily');
+        $data['father_id'] = $record->childInFamily?->husband_id;
+        $data['mother_id'] = $record->childInFamily?->wife_id;
+        $data['confirm_parent_linking'] = false;
+
+        return $data;
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        $fatherId = ! empty($data['father_id']) ? (int) $data['father_id'] : null;
+        $motherId = ! empty($data['mother_id']) ? (int) $data['mother_id'] : null;
+        $confirmed = (bool) ($data['confirm_parent_linking'] ?? false);
+
+        if ($confirmed && ($fatherId || $motherId)) {
+            $family = Family::query()
+                ->where('husband_id', $fatherId)
+                ->where('wife_id', $motherId)
+                ->first();
+
+            if (! $family) {
+                $family = Family::query()->create([
+                    'husband_id' => $fatherId,
+                    'wife_id' => $motherId,
+                    'team_id' => Auth::user()?->currentTeam?->id,
+                ]);
+            }
+
+            $data['child_in_family_id'] = $family->id;
+        }
+
+        unset($data['father_id'], $data['mother_id'], $data['confirm_parent_linking']);
+
+        return $data;
+    }
 
     protected function getHeaderActions(): array
     {
