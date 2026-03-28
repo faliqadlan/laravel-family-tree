@@ -1,0 +1,34 @@
+version: '3'
+
+# RoadRunner configuration for Laravel Octane
+# https://roadrunner.dev/docs/intro-config
+# https://laravel.com/docs/octane#roadrunner
+
+rpc:
+  listen: tcp://127.0.0.1:6001
+
+server:
+  command: "php artisan octane:start --server=roadrunner --host=0.0.0.0 --port=80 --rpc-port=6001"
+  relay: pipes
+
+http:
+  address: 0.0.0.0:80
+  middleware: [static, gzip]
+  uploads:
+    dir: /tmp
+  pool:
+    num_workers: auto
+    max_jobs: 500
+    allocate_timeout: 60s
+    destroy_timeout: 60s
+
+static:
+  dir: public
+  forbid:
+    - .php
+
+logs:
+  mode: development
+  level: error
+  output: stderr
+  err_output: stderr
