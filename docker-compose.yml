@@ -1,20 +1,35 @@
+# =============================================================
+# docker-compose.yml — Liberu Genealogy
+# =============================================================
+# Quick start (WSL / Linux / macOS):
+#   cp .env.docker .env
+#   make setup          # first time: builds, migrates, seeds
+#   make up             # subsequent starts
+#
+# All ports are configurable via .env (FORWARD_* variables).
+# =============================================================
+
 services:
+
+  # ── Web Application ─────────────────────────────────────────
   app:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         PHP_VERSION: '8.3'
+        # Pass host UID/GID so file-ownership inside the container
+        # matches the WSL/Linux host user (avoids permission errors).
         WWWUSER: '${WWWUSER:-1000}'
         WWWGROUP: '${WWWGROUP:-1000}'
-    image: boilerplate-laravel:latest
+    image: liberu-genealogy:latest
     ports:
       - '${APP_PORT:-8000}:80'
     environment:
       CONTAINER_MODE: http
       OCTANE_SERVER: roadrunner
-      WITH_SCHEDULER: 'true'
-      WITH_HORIZON: 'false'
+      WITH_SCHEDULER: '${WITH_SCHEDULER:-true}'
+      WITH_HORIZON: '${WITH_HORIZON:-false}'
       RUNNING_MIGRATIONS_AND_SEEDERS: '${RUNNING_MIGRATIONS_AND_SEEDERS:-false}'
     env_file:
       - .env
@@ -28,14 +43,27 @@ services:
         condition: service_healthy
     networks:
       - appnet
+    # Proper PID-1 signal handling — important on WSL2.
+    init: true
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'php', 'artisan', 'octane:status']
+      start_period: 30s
+      interval: 15s
+      timeout: 10s
+      retries: 5
 
+  # ── Queue Worker (optional profile) ────────────────────────
+  # Enable with:  docker compose --profile worker up -d
   worker:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         PHP_VERSION: '8.3'
-    image: boilerplate-laravel:latest
+        WWWUSER: '${WWWUSER:-1000}'
+        WWWGROUP: '${WWWGROUP:-1000}'
+    image: liberu-genealogy:latest
     environment:
       CONTAINER_MODE: worker
       WORKER_COMMAND: 'php /var/www/html/artisan queue:work --sleep=3 --tries=3 --max-time=3600'
@@ -51,9 +79,43 @@ services:
         condition: service_healthy
     networks:
       - appnet
+    init: true
+    restart: unless-stopped
     profiles:
       - worker
 
+  # ── One-shot init container ──────────────────────────────────
+  # Runs migrate + seed once, then exits (exit code 0 = success).
+  # Usage:  docker compose run --rm init
+  init:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: '8.3'
+        WWWUSER: '${WWWUSER:-1000}'
+        WWWGROUP: '${WWWGROUP:-1000}'
+    image: liberu-genealogy:latest
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        php artisan key:generate --force
+        php artisan migrate --force --seed
+        php artisan storage:link
+        php artisan optimize:clear
+    env_file:
+      - .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - appnet
+    profiles:
+      - init
+
+  # ── MySQL 8.0 ───────────────────────────────────────────────
   mysql:
     image: mysql:8.0
     ports:
@@ -67,12 +129,15 @@ services:
       - mysql:/var/lib/mysql
     networks:
       - appnet
+    restart: unless-stopped
     healthcheck:
-      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p${DB_PASSWORD:-secret}']
+      start_period: 20s
       interval: 10s
       timeout: 5s
       retries: 5
 
+  # ── Redis 7 ─────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
     ports:
@@ -81,12 +146,16 @@ services:
       - redis:/data
     networks:
       - appnet
+    restart: unless-stopped
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
+      start_period: 10s
       interval: 10s
       timeout: 5s
       retries: 5
 
+  # ── Mailpit (local SMTP + web UI) ────────────────────────────
+  # Web UI: http://localhost:8025
   mailpit:
     image: axllent/mailpit:latest
     ports:
@@ -94,6 +163,7 @@ services:
       - '${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025'
     networks:
       - appnet
+    restart: unless-stopped
 
 networks:
   appnet:

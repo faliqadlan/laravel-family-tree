@@ -15,6 +15,9 @@ class Kernel extends ConsoleKernel
     {
         // Run duplicate scanning once a day (adjust frequency as needed)
         $schedule->job(new ScanForDuplicatePersons(0.7, 10))->daily();
+
+        // Send gathering reminders 3 days before events
+        $schedule->command('gatherings:send-reminders --days=3')->dailyAt('08:00');
     }
 
     /**

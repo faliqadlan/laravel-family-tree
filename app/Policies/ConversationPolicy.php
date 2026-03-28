@@ -62,4 +62,13 @@ class ConversationPolicy
     {
         return $user->checkPermissionTo('force-delete Conversation');
     }
+
+    /**
+     * Determine whether the user can start a conversation with another specific user.
+     * Requires the two users to be connected.
+     */
+    public function startWith(User $user, User $otherUser): bool
+    {
+        return $user->isConnectedTo($otherUser->id);
+    }
 }

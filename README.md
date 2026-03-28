@@ -29,108 +29,202 @@
 
 **Liberu Genealogy** is a free, open-source genealogy platform that makes it easy to build, explore and share family trees. It is built on the latest versions of [Laravel 12](https://laravel.com), [PHP 8.5](https://www.php.net), [Filament 5](https://filamentphp.com) and [Livewire 4](https://livewire.laravel.com), providing a fast, modern, and accessible web application for everyone from hobbyists to professional genealogists.
 
-The platform integrates with leading genealogy services (MyHeritage, Ancestry, FamilySearch, FindMyPast), supports GEDCOM file import/export, DNA-match analysis, facial-recognition-assisted photo tagging, and a rich set of research tools — all within a modular, developer-friendly codebase designed to grow with your needs.
+The platform integrates with leading genealogy services (MyHeritage, Ancestry, FamilySearch, FindMyPast), supports GEDCOM file import/export, DNA-match analysis, facial-recognition-assisted photo tagging, and a rich set of research, social and event-management tools — all within a modular, developer-friendly codebase designed to grow with your needs.
 
 - 🌐 **Live demo**: https://familytree365.com
 - 🏠 **Managed hosting**: https://liberu.co.uk
+
+---
+
+## Table of Contents
+
+- [Features](#features)
+- [Quick Start — Windows WSL + Docker](#quick-start--windows-wsl--docker)
+- [Other Installation Options](#other-installation-options)
+- [Architecture Overview](#architecture-overview)
+- [Our Projects](#our-projects)
+- [Contributing](#contributing)
+- [License](#license)
+- [Community & Support](#community--support)
+
+---
 
 ## Features
 
 ### Core Genealogy
 
-- **Family Tree Management** — Build, browse and visualise family trees with interactive charts and timelines.
-- **GEDCOM Import / Export** — Read and write the industry-standard GEDCOM format so data is always portable.
-- **DNA Matching** — Upload raw DNA results, find genetic relatives and map triangulated segments.
-- **Facial Recognition** — Automatically tag people in photos using AI-assisted facial recognition.
-- **Media Management** — Attach photos, documents and audio files to individuals and events.
-- **Source Citations** — Record and cite primary and secondary sources for every fact.
-- **Research Checklists** — Track research tasks and to-dos per person or family line.
-- **Privacy Controls** — Automatically redact living persons for public views.
+| Feature | Description |
+|---|---|
+| **Family Tree Management** | Build, browse and visualise family trees with interactive pedigree, fan and descendant charts. |
+| **GEDCOM Import / Export** | Full read/write support for the industry-standard GEDCOM format. |
+| **Gramps XML** | Import and export Gramps XML files for cross-tool compatibility. |
+| **DNA Matching** | Upload raw DNA results, find genetic relatives and map triangulated segments. |
+| **Facial Recognition** | Automatically tag people in photos using AI-assisted facial recognition. |
+| **Media Management** | Attach photos, documents and audio files to individuals and events. |
+| **Source Citations** | Record and cite primary and secondary sources for every fact. |
+| **Research Checklists** | Track research tasks and to-dos per person or family line. |
+| **Document Transcription** | Transcribe handwritten documents with AI-assisted handwriting recognition. |
+
+### Social & Community
+
+| Feature | Description |
+|---|---|
+| **Networking Hub** | LinkedIn-style connection graph: discover users, send/approve connection requests, manage your network. |
+| **Granular Privacy** | Per-field visibility controls — choose which data is `public`, `masked` (e.g. "198X", "J*** S***") or `hidden` for non-connections. |
+| **Private Messaging** | Direct messages restricted to approved connections only. |
+| **Family Gatherings** | Plan reunions, memorials and weddings linked to specific trees or people, with RSVPs, reminders and a discussion board. |
+| **Fund Pooling** | Organizers set funding goals; attendees pledge and log contributions; real-time progress bar tracks totals. |
+| **Calendar Download** | Attendees download a `.ics` file to add gatherings to any calendar app. |
 
 ### Integrations & Discovery
 
-- **MyHeritage** — Search millions of family trees and records for potential matches.
-- **Ancestry** — Discover records and hints directly from Ancestry.com.
-- **FamilySearch** — Access the world's largest free family tree and record collection.
-- **FindMyPast** — Tap into UK/Ireland records: newspapers, parish registers, census, GRO indices, military records and more. See [FINDMYPAST_FEATURES.md](FINDMYPAST_FEATURES.md).
-- **Smart Confidence Scoring** — Machine-learning algorithms rank and score match candidates automatically.
-- **Automated Background Discovery** — Queued jobs continuously search external services for new hints.
+| Feature | Description |
+|---|---|
+| **MyHeritage** | Search millions of family trees and records for potential matches. |
+| **Ancestry** | Discover records and hints directly from Ancestry.com. |
+| **FamilySearch** | Access the world's largest free family tree and record collection. |
+| **FindMyPast** | UK/Ireland records — newspapers, parish registers, census, GRO indices, military records. See [FINDMYPAST_FEATURES.md](FINDMYPAST_FEATURES.md). |
+| **Smart Confidence Scoring** | Machine-learning algorithms rank and score match candidates automatically. |
+| **Automated Hints** | Queued jobs continuously search external services for new hints. |
 
 ### Developer Experience
 
-- Built on **Laravel 12** with **Filament 5** admin panels and **Livewire 4** reactive components.
-- **Modular architecture** — features are cleanly separated into service classes and Filament resources.
-- Full **Docker** and **Laravel Sail** support for reproducible local environments.
-- Comprehensive **PHPUnit** test suite with code-coverage reporting via Codecov.
-- **GitHub Actions** CI/CD pipelines for install, test and Docker build workflows.
+- **Laravel 12** + **Filament 5** admin panels + **Livewire 4** reactive components
+- **Modular architecture** — features cleanly separated into service classes and Filament resources
+- **Docker** + **WSL2** first-class support with one-command setup (`./setup-wsl.sh`)
+- **Laravel Octane / RoadRunner** for high-performance HTTP serving
+- Comprehensive **PHPUnit** test suite with code-coverage via Codecov
+- **GitHub Actions** CI/CD for install, test and Docker build workflows
 
-## Installation
+---
 
-**Requirements:** PHP 8.5, Composer, Node.js, a database (MySQL / MariaDB / PostgreSQL), and optionally Docker.
+## Quick Start — Windows WSL + Docker
 
-### Option 1 — Command-line installer (recommended)
-
-Clone the repository and run the provided installer script:
+> **Prerequisites (install once on Windows):**
+> 1. [Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/) — enable *WSL 2 backend* in Settings → General
+> 2. In Docker Desktop → Settings → Resources → WSL Integration — enable your distro (e.g. Ubuntu)
+> 3. Open your WSL terminal and confirm Docker works: `docker info`
 
 ```bash
-git clone https://github.com/liberu-genealogy/genealogy-laravel.git
-cd genealogy-laravel
-./setup.sh
+# 1. Clone the repository inside WSL (not under /mnt/c/ — use your WSL home dir)
+git clone https://github.com/faliqadlan/laravel-family-tree.git
+cd laravel-family-tree
+
+# 2. Run the WSL bootstrap script (builds images, migrates DB, seeds, starts stack)
+chmod +x setup-wsl.sh
+./setup-wsl.sh
 ```
 
-The `setup.sh` script will install PHP and Node dependencies, copy the example environment file, generate an application key and run database migrations automatically.
+That's it. The script will:
+- ✅ Build Docker images with your WSL user's UID/GID (no permission errors)
+- ✅ Start MySQL, Redis, Mailpit and the Octane/RoadRunner app server
+- ✅ Generate an `APP_KEY`, run all migrations and seed demo data
+- ✅ Print the URLs when done
 
-> **Tip:** If you prefer a guided, point-and-click experience, a **graphical installer** is available. Launch it from a terminal with `./setup.sh` or use your desktop file manager to run the script on supported environments, and follow the on-screen prompts.
+| Service | URL |
+|---|---|
+| Application | http://localhost:8000 |
+| Mailpit (email UI) | http://localhost:8025 |
+| MySQL | localhost:3306 (user `liberu` / password `secret`) |
 
-### Option 2 — Manual steps
+### Common Docker commands
 
 ```bash
-git clone https://github.com/liberu-genealogy/genealogy-laravel.git
-cd genealogy-laravel
+make up             # Start all containers
+make down           # Stop all containers
+make logs           # Tail all logs
+make shell          # Open a shell inside the app container
+make artisan CMD='route:list'   # Run any Artisan command
+make migrate        # Run pending migrations
+make fresh          # Drop DB, migrate fresh + seed (WARNING: destroys data)
+make test           # Run PHPUnit
+make help           # Show all available make targets
+```
+
+> **Cloning tip:** Always clone inside the WSL filesystem (e.g. `~/projects/`) rather than
+> a Windows path (`/mnt/c/…`). I/O through the 9P bridge is slow and can cause inotify issues.
+
+---
+
+## Other Installation Options
+
+### Option A — Interactive setup script (Linux / macOS)
+
+```bash
+git clone https://github.com/faliqadlan/laravel-family-tree.git
+cd laravel-family-tree
+chmod +x setup.sh && ./setup.sh
+```
+
+Select **1 — Standalone** for a local PHP install or **2 — Docker** for a containerised setup.
+
+### Option B — Manual (local PHP)
+
+```bash
+git clone https://github.com/faliqadlan/laravel-family-tree.git
+cd laravel-family-tree
 composer install
 cp .env.example .env
+# Edit .env: set DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD
 php artisan key:generate
 php artisan migrate --seed
 npm install && npm run build
 php artisan serve
 ```
 
-Visit http://localhost:8000 in your browser.
+Visit http://localhost:8000.
 
-### Option 3 — Docker
-
-```bash
-docker build -t genealogy-laravel .
-docker run -p 8000:8000 genealogy-laravel
-```
-
-For a full development environment with a database container, use **Laravel Sail**:
+### Option C — Docker (non-WSL)
 
 ```bash
-./vendor/bin/sail up -d
+cp .env.docker .env     # pre-configured for Docker service names
+make setup              # build + init + up in one step
 ```
 
-Then visit http://localhost.
+---
+
+## Architecture Overview
+
+```
+app/
+├── Console/Commands/     # Artisan commands (gatherings:send-reminders, etc.)
+├── Filament/App/
+│   ├── Pages/            # Full-page Filament UI (NetworkingHubPage, PrivateMessagingPage, …)
+│   └── Resources/        # Filament CRUD resources (Person, Family, Gathering, …)
+├── Livewire/             # Reactive components (GatheringDetailPage, charts, …)
+├── Models/               # 90+ Eloquent models
+├── Modules/              # Domain modules (Person, Family, Tree, DNA, Events, …)
+├── Notifications/        # Laravel notifications (email + database)
+├── Policies/             # Authorization policies
+└── Services/             # Business logic (ConnectionService, GatheringService, …)
+
+database/migrations/      # 170+ migrations
+resources/views/          # Blade views (Filament pages, Livewire templates)
+docs/
+├── DEPLOYMENT.md         # Deployment guide for humans
+└── AI_AGENT_SETUP.md     # Setup guide for AI coding agents
+```
+
+For a full feature walk-through, architecture diagrams and API references see the [`docs/`](docs/) directory.
+
+---
 
 ## Our Projects
 
-Liberu Genealogy is part of the wider **Liberu** open-source ecosystem. Each project below is a standalone Laravel application that can be run independently or alongside the others.
+Liberu Genealogy is part of the wider **Liberu** open-source ecosystem.
 
 | Project | Repository | Description |
 |---|---|---|
-| Genealogy | [liberu-genealogy/genealogy-laravel](https://github.com/liberu-genealogy/genealogy-laravel) | Family tree and genealogy platform (this repository). |
-| Boilerplate (core) | [liberusoftware/boilerplate](https://github.com/liberusoftware/boilerplate) | Core starter and shared utilities used across Liberu projects. |
-| Accounting | [liberu-accounting/accounting-laravel](https://github.com/liberu-accounting/accounting-laravel) | Accounting and invoicing features tailored for Laravel applications. |
-| Automation | [liberu-automation/automation-laravel](https://github.com/liberu-automation/automation-laravel) | Automation tooling and workflow integrations for Laravel projects. |
-| Billing | [liberu-billing/billing-laravel](https://github.com/liberu-billing/billing-laravel) | Subscription and billing management integrations (payments, invoices). |
-| Browser Game | [liberu-browser-game/browser-game-laravel](https://github.com/liberu-browser-game/browser-game-laravel) | Example Laravel-based browser game platform and mechanics. |
-| CMS | [liberu-cms/cms-laravel](https://github.com/liberu-cms/cms-laravel) | Content management features and modular page administration. |
-| Control Panel | [liberu-control-panel/control-panel-laravel](https://github.com/liberu-control-panel/control-panel-laravel) | Administration/control-panel components for managing services. |
-| CRM | [liberu-crm/crm-laravel](https://github.com/liberu-crm/crm-laravel) | Customer relationship management features and integrations. |
-| E‑commerce | [liberu-ecommerce/ecommerce-laravel](https://github.com/liberu-ecommerce/ecommerce-laravel) | E‑commerce storefront, product and order management. |
-| Maintenance | [liberu-maintenance/maintenance-laravel](https://github.com/liberu-maintenance/maintenance-laravel) | Scheduling, tracking and reporting for maintenance tasks. |
-| Real Estate | [liberu-real-estate/real-estate-laravel](https://github.com/liberu-real-estate/real-estate-laravel) | Property listings and real-estate management features. |
-| Social Network | [liberu-social-network/social-network-laravel](https://github.com/liberu-social-network/social-network-laravel) | Social features, profiles, feeds and messaging for Laravel apps. |
+| Genealogy | [liberu-genealogy/genealogy-laravel](https://github.com/liberu-genealogy/genealogy-laravel) | Family tree and genealogy platform *(this repo)*. |
+| Boilerplate | [liberusoftware/boilerplate](https://github.com/liberusoftware/boilerplate) | Core starter and shared utilities. |
+| Accounting | [liberu-accounting/accounting-laravel](https://github.com/liberu-accounting/accounting-laravel) | Accounting and invoicing. |
+| Automation | [liberu-automation/automation-laravel](https://github.com/liberu-automation/automation-laravel) | Workflow automation integrations. |
+| Billing | [liberu-billing/billing-laravel](https://github.com/liberu-billing/billing-laravel) | Subscription and billing management. |
+| CMS | [liberu-cms/cms-laravel](https://github.com/liberu-cms/cms-laravel) | Content management. |
+| CRM | [liberu-crm/crm-laravel](https://github.com/liberu-crm/crm-laravel) | Customer relationship management. |
+| Social Network | [liberu-social-network/social-network-laravel](https://github.com/liberu-social-network/social-network-laravel) | Social profiles, feeds and messaging. |
+
+---
 
 ## Contributing
 
@@ -139,42 +233,40 @@ Contributions are **welcome** and will be fully **credited**! We accept contribu
 ### Pull Request Process
 
 1. **Fork** the repository and create your branch from `main`.
-2. **Follow PSR-4 coding standards.** The easiest way to apply the conventions is to install [PHP CS Fixer](https://github.com/FriendsOfPHP/PHP-CS-Fixer).
+2. **Follow PSR-4 coding standards.** Run `./vendor/bin/pint` to auto-fix style issues.
 3. **Write or update tests** for any new or changed behaviour.
-4. **Run the test suite** locally and make sure everything passes:
+4. **Run the test suite** and make sure everything passes:
    ```bash
+   make test
+   # or without Docker:
    vendor/bin/phpunit
    ```
-5. **Document any change in behaviour** — update `README.md` and any other relevant documentation.
+5. **Document any change in behaviour** — update `README.md` and relevant docs in `docs/`.
 6. **Create feature branches.** Do not send pull requests from your `main` branch.
-7. **One pull request per feature.** If you want to do more than one thing, send multiple pull requests.
-8. **Keep a coherent history.** Please [squash intermediate commits](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History) before submitting.
+7. **One pull request per feature.**
 
-Please also read [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before opening a pull request.
+Please also read [CONTRIBUTING.md](CONTRIBUTING.md) and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+---
 
 ## License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for the full text.
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file.
 
-The MIT License is one of the most permissive open-source licenses available. This means:
+- ✅ Free to use in personal, commercial or government projects
+- ✅ Free to modify and distribute
+- ✅ No warranty obligations
 
-- ✅ **Free to use** — use Liberu Genealogy in personal, commercial or government projects at no cost.
-- ✅ **Free to modify** — adapt the source code to suit your own requirements.
-- ✅ **Free to distribute** — share your own copies or forks with anyone.
-- ✅ **No warranty obligations** — the software is provided "as is" without warranty of any kind.
-- ✅ **Minimal restrictions** — the only requirement is to include the original copyright notice and licence text in any distribution.
-
-By choosing the MIT License, Liberu Genealogy ensures that the community can build on this work freely, fostering collaboration, innovation and long-term sustainability.
+---
 
 ## Community & Support
 
 - **Issues & bug reports**: https://github.com/liberu-genealogy/genealogy-laravel/issues
-- **Feature requests**: Open a GitHub Discussion or issue in the repository.
+- **Feature requests**: Open a GitHub Discussion or issue
 - **WhatsApp**: [Chat with us](https://wa.me/+441793200950)
-- **Social media**: YouTube · Facebook · Instagram · X · LinkedIn (links at the top of this page)
+- **Social media**: YouTube · Facebook · Instagram · X · LinkedIn *(links at top)*
 
 ---
 
 Maintainers: Liberu Genealogy team
-
-Contributors: see https://github.com/liberu-genealogy/genealogy-laravel/graphs/contributors
+Contributors: https://github.com/liberu-genealogy/genealogy-laravel/graphs/contributors

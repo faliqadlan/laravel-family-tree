@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\UserConnection;
+use App\Models\UserPrivacySetting;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 //use JoelButcher\Socialstream\HasConnectedAccounts;
@@ -503,5 +505,61 @@ class User extends Authenticatable implements HasDefaultTenant, HasTenants, Fila
     {
         return $this->hasMany(SocialFamilyConnection::class)
             ->where('status', 'pending');
+    }
+
+    // Feature: Connections
+    public function sentConnections(): HasMany
+    {
+        return $this->hasMany(UserConnection::class, 'requester_id');
+    }
+
+    public function receivedConnections(): HasMany
+    {
+        return $this->hasMany(UserConnection::class, 'receiver_id');
+    }
+
+    public function approvedConnections(): \Illuminate\Database\Eloquent\Builder
+    {
+        return UserConnection::where(function ($q) {
+            $q->where('requester_id', $this->id)->orWhere('receiver_id', $this->id);
+        })->where('status', UserConnection::STATUS_APPROVED);
+    }
+
+    public function isConnectedTo(int $userId): bool
+    {
+        return UserConnection::where(function ($q) use ($userId) {
+            $q->where('requester_id', $this->id)->where('receiver_id', $userId);
+        })->orWhere(function ($q) use ($userId) {
+            $q->where('requester_id', $userId)->where('receiver_id', $this->id);
+        })->where('status', UserConnection::STATUS_APPROVED)->exists();
+    }
+
+    public function privacySetting(): HasOne
+    {
+        return $this->hasOne(UserPrivacySetting::class);
+    }
+
+    public function getPrivacySetting(): UserPrivacySetting
+    {
+        return $this->privacySetting ?? new UserPrivacySetting([
+            'profile_visibility' => UserPrivacySetting::VISIBILITY_CONNECTIONS,
+            'field_visibility' => [],
+        ]);
+    }
+
+    // Feature: Gatherings
+    public function organizedGatherings(): HasMany
+    {
+        return $this->hasMany(Gathering::class, 'organizer_id');
+    }
+
+    public function gatheringInvitations(): HasMany
+    {
+        return $this->hasMany(GatheringInvitation::class);
+    }
+
+    public function gatheringContributions(): HasMany
+    {
+        return $this->hasMany(GatheringContribution::class);
     }
 }
