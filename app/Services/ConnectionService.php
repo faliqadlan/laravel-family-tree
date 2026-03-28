@@ -134,9 +134,21 @@ class ConnectionService
     public function getMaskedProfile(User $subject, User $viewer): array
     {
         $privacy = $subject->getPrivacySetting();
-        $isConnected = $viewer->id === $subject->id || $subject->isConnectedTo($viewer->id);
+        $isSelf = $viewer->id === $subject->id;
+        $isConnected = $isSelf || $subject->isConnectedTo($viewer->id);
 
-        // Respect top-level profile visibility
+        // Owner always sees their own full profile data
+        if ($isSelf) {
+            return [
+                'name' => $subject->name,
+                'email' => $subject->email,
+                'birthday' => $subject->birthday ?? null,
+                'photo' => $subject->profile_photo_url ?? null,
+                'phone' => $subject->phone ?? null,
+            ];
+        }
+
+        // Respect top-level profile visibility for non-owners
         if ($privacy->profile_visibility === UserPrivacySetting::VISIBILITY_PRIVATE && !$isConnected) {
             return ['name' => null, 'email' => null, 'birthday' => null, 'photo' => null, 'phone' => null];
         }

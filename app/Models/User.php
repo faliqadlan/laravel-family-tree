@@ -518,7 +518,7 @@ class User extends Authenticatable implements HasDefaultTenant, HasTenants, Fila
         return $this->hasMany(UserConnection::class, 'receiver_id');
     }
 
-    public function approvedConnections()
+    public function approvedConnections(): \Illuminate\Database\Eloquent\Builder
     {
         return UserConnection::where(function ($q) {
             $q->where('requester_id', $this->id)->orWhere('receiver_id', $this->id);
