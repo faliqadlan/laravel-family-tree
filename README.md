@@ -1,38 +1,21 @@
-# Liberu Genealogy
-
-[![](https://avatars.githubusercontent.com/u/158830885?s=200&v=4)](https://www.liberu.co.uk)
+# Laravel Family Tree
 
 ![](https://img.shields.io/badge/PHP-8.5-informational?style=flat&logo=php&color=4f5b93)
 ![](https://img.shields.io/badge/Laravel-12-informational?style=flat&logo=laravel&color=ef3b2d)
 ![](https://img.shields.io/badge/Filament-5-informational?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgeG1sbnM6dj0iaHR0cHM6Ly92ZWN0YS5pby9uYW5vIj48cGF0aCBkPSJNMCAwaDQ4djQ4SDBWMHoiIGZpbGw9IiNmNGIyNWUiLz48cGF0aCBkPSJNMjggN2wtMSA2LTMuNDM3LjgxM0wyMCAxNWwtMSAzaDZ2NWgtN2wtMyAxOEg4Yy41MTUtNS44NTMgMS40NTQtMTEuMzMgMy0xN0g4di01bDUtMSAuMjUtMy4yNUMxNCAxMSAxNCAxMSAxNS40MzggOC41NjMgMTkuNDI5IDYuMTI4IDIzLjQ0MiA2LjY4NyAyOCA3eiIgZmlsbD0iIzI4MjQxZSIvPjxwYXRoIGQ9Ik0zMCAxOGg0YzIuMjMzIDUuMzM0IDIuMjMzIDUuMzM0IDEuMTI1IDguNUwzNCAyOWMtLjE2OCAzLjIwOS0uMTY4IDMuMjA5IDAgNmwtMiAxIDEgM2gtNXYyaC0yYy44NzUtNy42MjUuODc1LTcuNjI1IDItMTFoMnYtMmgtMnYtMmwyLTF2LTQtM3oiIGZpbGw9IiMyYTIwMTIiLz48cGF0aCBkPSJNMzUuNTYzIDYuODEzQzM4IDcgMzggNyAzOSA4Yy4xODggMi40MzguMTg4IDIuNDM4IDAgNWwtMiAyYy0yLjYyNS0uMzc1LTIuNjI1LS4zNzUtNS0xLS42MjUtMi4zNzUtLjYyNS0yLjM3NS0xLTUgMi0yIDItMiA0LjU2My0yLjE4N3oiIGZpbGw9IiM0MDM5MzEiLz48cGF0aCBkPSJNMzAgMThoNGMyLjA1NSA1LjMxOSAyLjA1NSA1LjMxOSAxLjgxMyA4LjMxM0wzNSAyOGwtMyAxdi0ybC00IDF2LTJsMi0xdi00LTN6IiBmaWxsPSIjMzEyODFlIi8+PHBhdGggZD0iTTI5IDI3aDN2MmgydjJoLTJ2MmwtNC0xdi0yaDJsLTEtM3oiIGZpbGw9IiMxNTEzMTAiLz48cGF0aCBkPSJNMzAgMThoNHYzaC0ydjJsLTMgMSAxLTZ6IiBmaWxsPSIjNjA0YjMyIi8+PC9zdmc+&&color=fdae4b&link=https://filamentphp.com)
 ![](https://img.shields.io/badge/Livewire-4-informational?style=flat&logo=Livewire&color=fb70a9)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Open Source Love](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red.svg)](https://opensource.org/licenses/MIT)
+[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/faliqadlan/laravel-family-tree)
 
-## Discover, preserve and share your family history — powered by Laravel 12, PHP 8.5 and Filament 5.
-
-[![Contact us on WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/+441793200950)
-[![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/@liberusoftware)
-[![Facebook](https://img.shields.io/badge/Facebook-%231877F2.svg?style=for-the-badge&logo=Facebook&logoColor=white)](https://www.facebook.com/liberusoftware)
-[![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?style=for-the-badge&logo=Instagram&logoColor=white)](https://www.instagram.com/liberusoftware)
-[![X](https://img.shields.io/badge/X-%23000000.svg?style=for-the-badge&logo=X&logoColor=white)](https://www.x.com/liberusoftware)
-[![LinkedIn](https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/company/liberugroup)
-[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://www.github.com/liberusoftware)
-
-[![Latest Release](https://img.shields.io/github/release/liberu-genealogy/genealogy-laravel.svg)](https://github.com/liberu-genealogy/genealogy-laravel/releases)
-[![Install](https://github.com/liberu-genealogy/genealogy-laravel/actions/workflows/install.yml/badge.svg)](https://github.com/liberu-genealogy/genealogy-laravel/actions/workflows/install.yml)
-[![Tests](https://github.com/liberu-genealogy/genealogy-laravel/actions/workflows/tests.yml/badge.svg)](https://github.com/liberu-genealogy/genealogy-laravel/actions/workflows/tests.yml)
-[![Docker CI](https://github.com/liberu-genealogy/genealogy-laravel/actions/workflows/main.yml/badge.svg)](https://github.com/liberu-genealogy/genealogy-laravel/actions/workflows/main.yml)
-[![Codecov](https://codecov.io/gh/liberu-genealogy/genealogy-laravel/branch/main/graph/badge.svg)](https://codecov.io/gh/liberu-genealogy/genealogy-laravel)
+## A modern, open-source family tree application built with Laravel 12, PHP 8.5 and Filament 5.
 
 ---
 
-**Liberu Genealogy** is a free, open-source genealogy platform that makes it easy to build, explore and share family trees. It is built on the latest versions of [Laravel 12](https://laravel.com), [PHP 8.5](https://www.php.net), [Filament 5](https://filamentphp.com) and [Livewire 4](https://livewire.laravel.com), providing a fast, modern, and accessible web application for everyone from hobbyists to professional genealogists.
+**Laravel Family Tree** is a free, open-source genealogy application for building, exploring and sharing family trees. It is powered by [Laravel 12](https://laravel.com), [PHP 8.5](https://www.php.net), [Filament 5](https://filamentphp.com) and [Livewire 4](https://livewire.laravel.com) — giving you a fast, modern and accessible web application suitable for personal hobbyists through to professional genealogists.
 
-The platform integrates with leading genealogy services (MyHeritage, Ancestry, FamilySearch, FindMyPast), supports GEDCOM file import/export, DNA-match analysis, facial-recognition-assisted photo tagging, and a rich set of research, social and event-management tools — all within a modular, developer-friendly codebase designed to grow with your needs.
+The app supports GEDCOM file import/export, DNA-match analysis, facial-recognition-assisted photo tagging, integration with major genealogy services, and a full suite of research, social and event-management tools — all inside a clean, modular codebase that is easy to extend.
 
-- 🌐 **Live demo**: https://familytree365.com
-- 🏠 **Managed hosting**: https://liberu.co.uk
+> **Upstream credit:** This project is a fork of [liberu-genealogy/genealogy-laravel](https://github.com/liberu-genealogy/genealogy-laravel). All original work is attributed to the Liberu Genealogy team.
 
 ---
 
@@ -42,7 +25,6 @@ The platform integrates with leading genealogy services (MyHeritage, Ancestry, F
 - [Quick Start — Windows WSL + Docker](#quick-start--windows-wsl--docker)
 - [Other Installation Options](#other-installation-options)
 - [Architecture Overview](#architecture-overview)
-- [Our Projects](#our-projects)
 - [Contributing](#contributing)
 - [License](#license)
 - [Community & Support](#community--support)
@@ -209,26 +191,9 @@ For a full feature walk-through, architecture diagrams and API references see th
 
 ---
 
-## Our Projects
-
-Liberu Genealogy is part of the wider **Liberu** open-source ecosystem.
-
-| Project | Repository | Description |
-|---|---|---|
-| Genealogy | [liberu-genealogy/genealogy-laravel](https://github.com/liberu-genealogy/genealogy-laravel) | Family tree and genealogy platform *(this repo)*. |
-| Boilerplate | [liberusoftware/boilerplate](https://github.com/liberusoftware/boilerplate) | Core starter and shared utilities. |
-| Accounting | [liberu-accounting/accounting-laravel](https://github.com/liberu-accounting/accounting-laravel) | Accounting and invoicing. |
-| Automation | [liberu-automation/automation-laravel](https://github.com/liberu-automation/automation-laravel) | Workflow automation integrations. |
-| Billing | [liberu-billing/billing-laravel](https://github.com/liberu-billing/billing-laravel) | Subscription and billing management. |
-| CMS | [liberu-cms/cms-laravel](https://github.com/liberu-cms/cms-laravel) | Content management. |
-| CRM | [liberu-crm/crm-laravel](https://github.com/liberu-crm/crm-laravel) | Customer relationship management. |
-| Social Network | [liberu-social-network/social-network-laravel](https://github.com/liberu-social-network/social-network-laravel) | Social profiles, feeds and messaging. |
-
----
-
 ## Contributing
 
-Contributions are **welcome** and will be fully **credited**! We accept contributions via Pull Requests on [GitHub](https://github.com/liberu-genealogy/genealogy-laravel).
+Contributions are **welcome** and will be fully **credited**! We accept contributions via Pull Requests on [GitHub](https://github.com/faliqadlan/laravel-family-tree).
 
 ### Pull Request Process
 
@@ -261,12 +226,10 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 ## Community & Support
 
-- **Issues & bug reports**: https://github.com/liberu-genealogy/genealogy-laravel/issues
-- **Feature requests**: Open a GitHub Discussion or issue
-- **WhatsApp**: [Chat with us](https://wa.me/+441793200950)
-- **Social media**: YouTube · Facebook · Instagram · X · LinkedIn *(links at top)*
+- **Issues & bug reports**: https://github.com/faliqadlan/laravel-family-tree/issues
+- **Feature requests**: Open a GitHub issue or discussion
 
 ---
 
-Maintainers: Liberu Genealogy team
-Contributors: https://github.com/liberu-genealogy/genealogy-laravel/graphs/contributors
+Maintained by [@faliqadlan](https://github.com/faliqadlan)  
+Contributors: https://github.com/faliqadlan/laravel-family-tree/graphs/contributors
