@@ -16,6 +16,8 @@ class PedigreeChart extends Component
 
     public bool $showDates = true;
 
+    public int $visibleNodeCount = 0;
+
     /**
      * The tree data used to render the chart.
      * @var array<mixed>
@@ -31,7 +33,7 @@ class PedigreeChart extends Component
     public function mount(?int $rootPersonId = null, int $generations = 4): void
     {
         $this->rootPersonId = $rootPersonId ?? Person::query()->value('id');
-        $this->generations = max(3, min(8, $generations));
+        $this->generations = max(2, min(8, $generations));
         $this->rebuildTree();
     }
 
@@ -44,7 +46,7 @@ class PedigreeChart extends Component
 
     public function setGenerations(int $generations): void
     {
-        $this->generations = max(3, min(8, $generations));
+        $this->generations = max(2, min(8, $generations));
         $this->rebuildTree();
         $this->dispatch('refreshChart');
     }
@@ -64,6 +66,7 @@ class PedigreeChart extends Component
     {
         if (! $this->rootPersonId) {
             $this->tree = [];
+            $this->visibleNodeCount = 0;
             return;
         }
 
@@ -71,10 +74,12 @@ class PedigreeChart extends Component
 
         if (! $root) {
             $this->tree = [];
+            $this->visibleNodeCount = 0;
             return;
         }
 
         $this->tree = $this->buildTree($root, 1, $this->generations);
+        $this->visibleNodeCount = $this->countNodes($this->tree);
     }
 
     protected function buildTree(Person $person, int $currentGen, int $maxGen): array
@@ -127,11 +132,11 @@ class PedigreeChart extends Component
         $imageAlt = htmlspecialchars($node['name'] ?? 'Person', ENT_QUOTES, 'UTF-8');
         $editUrl = htmlspecialchars($this->personEditUrl($node['id']), ENT_QUOTES, 'UTF-8');
         // include thumbnail image in person box
-        $personHtml = "<div class=\"person-box {$sexClass}\" onclick=\"expandPerson({$node['id']})\">".
+        $personHtml = "<div class=\"person-box {$sexClass}\" onclick=\"expandPerson(event, {$node['id']})\">".
             "<div class=\"person-thumb\"><img src=\"{$imageSrc}\" alt=\"{$imageAlt}\" loading=\"lazy\"/></div>".
             "<div class=\"person-name\"><a href=\"{$editUrl}\" class=\"hover:underline\" target=\"_blank\" rel=\"noopener\">{$name}</a></div>".
             $datesHtml.
-            "<button class=\"expand-btn\" title=\"Set as root\" onclick=\"event.stopPropagation(); expandPerson({$node['id']});\">+</button>".
+            "<button class=\"expand-btn\" title=\"Set as root\" onclick=\"event.stopPropagation(); expandPerson(event, {$node['id']});\">+</button>".
             "</div>";
 
         $parentsHtml = '';
@@ -181,5 +186,24 @@ class PedigreeChart extends Component
         } catch (Throwable $e) {
             return url('/');
         }
+    }
+
+    protected function countNodes(array $node): int
+    {
+        if (empty($node)) {
+            return 0;
+        }
+
+        $count = 1;
+
+        if (! empty($node['father']) && is_array($node['father'])) {
+            $count += $this->countNodes($node['father']);
+        }
+
+        if (! empty($node['mother']) && is_array($node['mother'])) {
+            $count += $this->countNodes($node['mother']);
+        }
+
+        return $count;
     }
 }

@@ -10,7 +10,9 @@
     </div>
     <div class="chart-header mb-4">
         <h3 class="text-xl font-semibold text-gray-800">Descendant Chart</h3>
+        <p class="text-xs text-gray-500 mt-1">Drag to pan and use mouse wheel to zoom.</p>
         <div class="chart-controls flex gap-2 mt-2">
+            <button wire:click="setGenerations(2)" class="px-3 py-1 bg-blue-500 text-white rounded {{ $generations == 2 ? 'bg-blue-700' : '' }}">2 Gen</button>
             <button wire:click="setGenerations(3)" class="px-3 py-1 bg-blue-500 text-white rounded {{ $generations == 3 ? 'bg-blue-700' : '' }}">3 Gen</button>
             <button wire:click="setGenerations(4)" class="px-3 py-1 bg-blue-500 text-white rounded {{ $generations == 4 ? 'bg-blue-700' : '' }}">4 Gen</button>
             <button wire:click="setGenerations(5)" class="px-3 py-1 bg-blue-500 text-white rounded {{ $generations == 5 ? 'bg-blue-700' : '' }}">5 Gen</button>
@@ -116,8 +118,19 @@
             .attr("width", width)
             .attr("height", height);
 
-        const g = svg.append("g")
+        const viewport = svg.append("g");
+
+        const g = viewport.append("g")
             .attr("transform", "translate(40,40)");
+
+        const zoom = d3.zoom()
+            .scaleExtent([0.4, 3])
+            .on("zoom", (event) => {
+                viewport.attr("transform", event.transform);
+            });
+
+        svg.call(zoom);
+        svg.call(zoom.transform, d3.zoomIdentity);
 
         // Create tree layout
         const tree = d3.tree()

@@ -10,7 +10,19 @@
     </div>
     <div class="chart-header mb-4">
         <h3 class="text-xl font-semibold text-gray-800">Fan Chart</h3>
+        <p class="text-xs text-gray-500 mt-1">Drag to pan and use mouse wheel to zoom.</p>
+        @if(!($hasAncestors ?? false))
+            <div class="mt-2 rounded border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                The selected root person has no linked parents, so only the center node is shown.
+                @if($hasAnyAncestorData ?? false)
+                    <button wire:click="usePersonWithAncestors" class="ml-2 rounded bg-amber-600 px-2 py-1 text-white hover:bg-amber-700">
+                        Use a Person With Ancestors
+                    </button>
+                @endif
+            </div>
+        @endif
         <div class="chart-controls flex gap-2 mt-2">
+            <button wire:click="setGenerations(2)" class="px-3 py-1 bg-blue-500 text-white rounded {{ $generations == 2 ? 'bg-blue-700' : '' }}">2 Gen</button>
             <button wire:click="setGenerations(3)" class="px-3 py-1 bg-blue-500 text-white rounded {{ $generations == 3 ? 'bg-blue-700' : '' }}">3 Gen</button>
             <button wire:click="setGenerations(4)" class="px-3 py-1 bg-blue-500 text-white rounded {{ $generations == 4 ? 'bg-blue-700' : '' }}">4 Gen</button>
             <button wire:click="setGenerations(5)" class="px-3 py-1 bg-blue-500 text-white rounded {{ $generations == 5 ? 'bg-blue-700' : '' }}">5 Gen</button>
@@ -119,8 +131,19 @@ function renderFanChart(data, config) {
         .attr("width", width)
         .attr("height", height);
 
-    const g = svg.append("g")
+    const viewport = svg.append("g");
+
+    const g = viewport.append("g")
         .attr("transform", `translate(${width/2},${height/2})`);
+
+    const zoom = d3.zoom()
+        .scaleExtent([0.4, 3])
+        .on("zoom", (event) => {
+            viewport.attr("transform", event.transform);
+        });
+
+    svg.call(zoom);
+    svg.call(zoom.transform, d3.zoomIdentity);
 
     // Create partition layout
     const partition = d3.partition()
@@ -128,7 +151,7 @@ function renderFanChart(data, config) {
 
     // Create hierarchy
     const root = d3.hierarchy(data)
-        .sum(d => d.children ? 0 : 1)
+        .sum(d => (Array.isArray(d.children) && d.children.length > 0 ? 0 : 1))
         .sort((a, b) => b.value - a.value);
 
     partition(root);
@@ -159,7 +182,7 @@ function renderFanChart(data, config) {
     // Add text labels if enabled
     if (config.showNames) {
         g.selectAll("text")
-            .data(root.descendants().slice(1))
+            .data(root.descendants().slice(1).filter(d => (d.x1 - d.x0) > 0.12))
             .enter().append("text")
             .attr("class", "fan-text")
             .attr("transform", function(d) {

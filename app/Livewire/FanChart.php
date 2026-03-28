@@ -18,8 +18,9 @@ class FanChart extends Component
 
     public function mount($rootPersonId = null, $generations = 5): void
     {
-        $this->rootPersonId = $rootPersonId ?? Person::first()?->id;
-        $this->generations = $generations;
+        $requestedRoot = $rootPersonId ? (int) $rootPersonId : $this->findBestRootPersonId();
+        $this->rootPersonId = $this->resolveRootPersonId($requestedRoot);
+        $this->generations = max(2, min(8, (int) $generations));
     }
 
     public function getData(): array
@@ -30,6 +31,11 @@ class FanChart extends Component
 
         $rootPerson = Person::with(['childInFamily.husband', 'childInFamily.wife'])->find($this->rootPersonId);
         $fanData = $this->buildFanData($rootPerson, $this->generations);
+        $hasAncestors = (bool) (
+            $rootPerson?->childInFamily?->husband_id
+            || $rootPerson?->childInFamily?->wife_id
+        );
+        $hasAnyAncestorData = Person::query()->whereNotNull('child_in_family_id')->exists();
 
         return [
             'fanData' => $fanData,
@@ -38,6 +44,8 @@ class FanChart extends Component
             'showNames' => $this->showNames,
             'showDates' => $this->showDates,
             'colorScheme' => $this->colorScheme,
+            'hasAncestors' => $hasAncestors,
+            'hasAnyAncestorData' => $hasAnyAncestorData,
         ];
     }
 
@@ -81,7 +89,13 @@ class FanChart extends Component
 
     public function setRootPerson($personId): void
     {
-        $this->rootPersonId = $personId;
+        $this->rootPersonId = $this->resolveRootPersonId((int) $personId);
+        $this->dispatch('refreshFanChart');
+    }
+
+    public function usePersonWithAncestors(): void
+    {
+        $this->rootPersonId = $this->resolveRootPersonId($this->findBestRootPersonId());
         $this->dispatch('refreshFanChart');
     }
 
@@ -117,5 +131,54 @@ class FanChart extends Component
     public function getPeopleListProperty(): array
     {
         return Person::getListOptimized()->toArray();
+    }
+
+    protected function findBestRootPersonId(): ?int
+    {
+        return Person::query()
+            ->whereHas('childInFamily', function ($query) {
+                $query->whereNotNull('husband_id')
+                    ->orWhereNotNull('wife_id');
+            })
+            ->value('id')
+            ?? Person::query()->value('id');
+    }
+
+    protected function resolveRootPersonId(?int $requestedRootId): ?int
+    {
+        if (! $requestedRootId) {
+            return $this->findBestRootPersonId();
+        }
+
+        if ($this->personHasAncestors($requestedRootId)) {
+            return $requestedRootId;
+        }
+
+        if ($this->hasAnyAncestorData()) {
+            return $this->findBestRootPersonId();
+        }
+
+        return $requestedRootId;
+    }
+
+    protected function personHasAncestors(int $personId): bool
+    {
+        return Person::query()
+            ->whereKey($personId)
+            ->whereHas('childInFamily', function ($query) {
+                $query->whereNotNull('husband_id')
+                    ->orWhereNotNull('wife_id');
+            })
+            ->exists();
+    }
+
+    protected function hasAnyAncestorData(): bool
+    {
+        return Person::query()
+            ->whereHas('childInFamily', function ($query) {
+                $query->whereNotNull('husband_id')
+                    ->orWhereNotNull('wife_id');
+            })
+            ->exists();
     }
 }

@@ -10,7 +10,12 @@
     </div>
     <div class="chart-header mb-4">
         <h3 class="text-xl font-semibold text-gray-800">Pedigree Chart</h3>
+        <p class="text-xs text-gray-500 mt-1">Drag inside the chart to pan. Use generation buttons to resize ancestry depth.</p>
+        <p class="text-xs text-blue-700 mt-1">
+            Showing {{ $generations }} generation{{ $generations === 1 ? '' : 's' }} with {{ $visibleNodeCount }} visible people.
+        </p>
         <div class="chart-controls flex gap-2 mt-2">
+            <button wire:click="setGenerations(2)" class="px-3 py-1 bg-blue-500 text-white rounded {{ $generations == 2 ? 'bg-blue-700' : '' }}">2 Gen</button>
             <button wire:click="setGenerations(3)" class="px-3 py-1 bg-blue-500 text-white rounded {{ $generations == 3 ? 'bg-blue-700' : '' }}">3 Gen</button>
             <button wire:click="setGenerations(4)" class="px-3 py-1 bg-blue-500 text-white rounded {{ $generations == 4 ? 'bg-blue-700' : '' }}">4 Gen</button>
             <button wire:click="setGenerations(5)" class="px-3 py-1 bg-blue-500 text-white rounded {{ $generations == 5 ? 'bg-blue-700' : '' }}">5 Gen</button>
@@ -18,7 +23,7 @@
         </div>
     </div>
 
-    <div id="pedigree-chart-display" class="chart-display bg-white border rounded-lg p-4" style="min-height: 500px;">
+    <div id="pedigree-chart-display" class="chart-display bg-white border rounded-lg p-4" style="min-height: 500px; overflow: hidden; cursor: grab;">
         @if(!empty($tree))
             <div class="pedigree-tree">
                 {!! $this->renderPedigreeTree($tree) !!}
@@ -38,6 +43,10 @@
     flex-direction: column;
     align-items: center;
     font-family: Arial, sans-serif;
+    min-width: max-content;
+    padding: 12px;
+    transform-origin: center center;
+    will-change: transform;
 }
 
 .generation-level {
@@ -168,14 +177,119 @@
 </style>
 
 <script>
-function expandPerson(personId) {
-    $wire.call('expandPerson', personId);
+function expandPerson(event, personId) {
+    let wireId = null;
+
+    if (window.Livewire?.all) {
+        const pedigreeComponent = window.Livewire.all().find((component) => component.name === 'pedigree-chart');
+        if (pedigreeComponent) {
+            wireId = pedigreeComponent.id;
+        }
+    }
+
+    if (!wireId) {
+        const source = event && event.target ? event.target : null;
+        const root = source ? source.closest('[wire\\:id]') : null;
+        wireId = root ? root.getAttribute('wire:id') : null;
+    }
+
+    if (wireId && window.Livewire?.find) {
+        const component = window.Livewire.find(wireId);
+        if (component) {
+            component.call('expandPerson', personId);
+        }
+    }
 }
 
 document.addEventListener('livewire:init', () => {
     Livewire.on('refreshChart', () => {
-        console.log('Pedigree chart refreshed');
+        setupPedigreeInteractions();
     });
+
+    setupPedigreeInteractions();
 });
+
+function setupPedigreeInteractions() {
+    const el = document.getElementById('pedigree-chart-display');
+    if (!el || el.dataset.dragPanInit === '1') {
+        return;
+    }
+
+    el.dataset.dragPanInit = '1';
+    el.style.cursor = 'grab';
+
+    let tree = el.querySelector('.pedigree-tree');
+    let isDown = false;
+    let startX = 0;
+    let startY = 0;
+    let offsetX = 0;
+    let offsetY = 0;
+    let scale = 1;
+
+    const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+    const syncTree = () => {
+        const nextTree = el.querySelector('.pedigree-tree');
+        if (!nextTree) {
+            return;
+        }
+
+        tree = nextTree;
+        tree.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+    };
+
+    const applyTransform = () => {
+        syncTree();
+        if (tree) {
+            tree.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+        }
+    };
+
+    syncTree();
+
+    el.addEventListener('mousedown', (e) => {
+        isDown = true;
+        el.style.cursor = 'grabbing';
+        startX = e.clientX;
+        startY = e.clientY;
+    });
+
+    window.addEventListener('mouseup', () => {
+        isDown = false;
+        el.style.cursor = 'grab';
+    });
+
+    el.addEventListener('mouseleave', () => {
+        isDown = false;
+        el.style.cursor = 'grab';
+    });
+
+    el.addEventListener('mousemove', (e) => {
+        if (!isDown) {
+            return;
+        }
+        e.preventDefault();
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        startX = e.clientX;
+        startY = e.clientY;
+        offsetX += dx;
+        offsetY += dy;
+        applyTransform();
+    });
+
+    el.addEventListener('wheel', (e) => {
+        if (!e.ctrlKey) {
+            return;
+        }
+
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? -0.1 : 0.1;
+        scale = clamp(Number((scale + delta).toFixed(2)), 0.5, 2.5);
+        applyTransform();
+    }, { passive: false });
+
+    applyTransform();
+}
     </script>
 </div>
