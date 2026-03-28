@@ -546,4 +546,20 @@ class User extends Authenticatable implements HasDefaultTenant, HasTenants, Fila
             'field_visibility' => [],
         ]);
     }
+
+    // Feature: Gatherings
+    public function organizedGatherings(): HasMany
+    {
+        return $this->hasMany(Gathering::class, 'organizer_id');
+    }
+
+    public function gatheringInvitations(): HasMany
+    {
+        return $this->hasMany(GatheringInvitation::class);
+    }
+
+    public function gatheringContributions(): HasMany
+    {
+        return $this->hasMany(GatheringContribution::class);
+    }
 }

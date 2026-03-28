@@ -51,3 +51,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Stripe webhook endpoint used by Laravel Cashier
 Route::post('/stripe/webhook', '\\Laravel\\Cashier\\Http\\Controllers\\WebhookController@handleWebhook');
+
+Route::get('/gatherings/{token}', \App\Livewire\GatheringDetailPage::class)->name('gatherings.show');
