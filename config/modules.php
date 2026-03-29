@@ -67,13 +67,7 @@ return [
         'Person',
         'Family',
         'Tree',
-        'Places',
-        'Sources',
-        'Media',
         'Events',
-        'Notes',
-        'DNA',
-        'Import',
         'Admin',
     ],
 

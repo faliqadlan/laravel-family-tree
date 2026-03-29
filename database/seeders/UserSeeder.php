@@ -33,7 +33,10 @@ class UserSeeder extends Seeder
             $team->id => ['role' => 'admin'],
         ]);
 
-        $role = Role::where('name', 'super_admin')->firstOrFail();
+        $role = Role::firstOrCreate([
+            'name' => 'admin',
+            'guard_name' => 'web',
+        ]);
         if (! $adminUser->hasRole($role->name)) {
             $adminUser->assignRole($role);
         }

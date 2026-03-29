@@ -106,23 +106,7 @@ class AppPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->label('📊 Charts & Visualizations'),
                 NavigationGroup::make()
-                    ->label('📄 Reports'),
-                NavigationGroup::make()
-                    ->label('🔍 Research & Analysis'),
-                NavigationGroup::make()
-                    ->label('📋 Research Management'),
-                NavigationGroup::make()
-                    ->label('🧬 DNA & Genetics'),
-                NavigationGroup::make()
-                    ->label('📁 Media & Documents'),
-                NavigationGroup::make()
-                    ->label('🛠️ Data Management'),
-                NavigationGroup::make()
                     ->label('👥 Family Reunions'),
-                NavigationGroup::make()
-                    ->label('🎮 Gamification'),
-                NavigationGroup::make()
-                    ->label('⚙️ System Settings'),
                 NavigationGroup::make()
                     ->label('👤 Account & Settings'),
             ])
@@ -134,59 +118,17 @@ class AppPanelProvider extends PanelProvider
                         ? url(EditProfile::getUrl())
                         : url($panel->getPath())),
             ])
-            ->discoverResources(in: app_path('Filament/App/Resources'), for: 'App\\Filament\\App\\Resources')
             ->resources([
-                AIRecordMatchResource::class,
-                AddrResource::class,
-                AuthorResource::class,
-                ChanResource::class,
-                ChecklistTemplateResource::class,
-                CitationResource::class,
-                DatabaseResource::class,
-                DnaMatchingResource::class,
-                DnaResource::class,
-                DuplicateCheckResource::class,
                 FamilyEventResource::class,
                 FamilyResource::class,
-                FamilySlgsResource::class,
-                GedcomResource::class,
-                MediaObjectResource::class,
-                NoteResource::class,
-                PersonAliaResource::class,
-                PersonAnciResource::class,
-                PersonAssoResource::class,
-                PersonEventResource::class,
-                PersonLdsResource::class,
-                PersonNameFoneResource::class,
-                PersonNameResource::class,
-                PersonNameRomnResource::class,
                 PersonResource::class,
-                PersonSubmResource::class,
-                PlaceResource::class,
-                PublicationResource::class,
-                RecordTypeResource::class,
-                RefnResource::class,
-                RepositoryResource::class,
-                ResearchSpaceResource::class,
-                SmartMatchResource::class,
-                SourceDataEvenResource::class,
-                SourceDataResource::class,
-                SourceRefEvenResource::class,
-                SourceRefResource::class,
-                SourceRepoResource::class,
-                SourceResource::class,
-                SubmResource::class,
-                SubnResource::class,
-                TypeResource::class,
                 VirtualEventResource::class,
             ])
-            ->discoverPages(in: app_path('Filament/App/Pages'), for: 'App\\Filament\\App\\Pages')
             ->pages([
                 \App\Filament\App\Pages\Dashboard::class,
                 \App\Filament\App\Pages\PedigreeChartPage::class,
                 \App\Filament\App\Pages\FanChartPage::class,
                 \App\Filament\App\Pages\DescendantChartPage::class,
-                \App\Filament\App\Pages\GamificationPage::class,
                 EditProfile::class,
             ])
             ->discoverWidgets(in: app_path('Filament/App/Widgets'), for: 'App\\Filament\\App\\Widgets')

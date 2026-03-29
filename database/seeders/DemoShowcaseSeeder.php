@@ -4,11 +4,13 @@ namespace Database\Seeders;
 
 use App\Models\Family;
 use App\Models\Person;
+use App\Models\Role;
 use App\Models\Team;
 use App\Models\Tree;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class DemoShowcaseSeeder extends Seeder
 {
@@ -17,7 +19,7 @@ class DemoShowcaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $demoPassword = env('DEMO_USER_PASSWORD', 'familydemo123');
+        $demoPassword = env('DEMO_USER_PASSWORD', Str::random(16));
 
         $owner = User::updateOrCreate(
             ['email' => 'demo.owner@familytree365.test'],
@@ -54,9 +56,29 @@ class DemoShowcaseSeeder extends Seeder
             ]
         );
 
+        $adminRole = Role::firstOrCreate([
+            'name' => 'admin',
+            'guard_name' => 'web',
+        ]);
+
+        $userRole = Role::firstOrCreate([
+            'name' => 'user',
+            'guard_name' => 'web',
+        ]);
+
+        if (! $owner->hasRole('admin')) {
+            $owner->assignRole($adminRole);
+        }
+
+        foreach ([$coResearcher, $viewer] as $member) {
+            if (! $member->hasRole('user')) {
+                $member->assignRole($userRole);
+            }
+        }
+
         foreach ([$owner, $coResearcher, $viewer] as $user) {
             $user->teams()->syncWithoutDetaching([
-                $team->id => ['role' => $user->id === $owner->id ? 'admin' : 'editor'],
+                $team->id => ['role' => $user->id === $owner->id ? 'admin' : 'user'],
             ]);
             if ((int) $user->current_team_id !== (int) $team->id) {
                 $user->current_team_id = $team->id;
